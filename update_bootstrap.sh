@@ -137,8 +137,6 @@ else
 echo -e "Creating bootstrap skipped! Block height not reachable..."
 fi
 
-
-
 echo  -e "======================================================[$data][END]"
 
 fi
