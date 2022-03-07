@@ -4,6 +4,7 @@ username="root"
 server_name="cdn-5.runonflux.io"
 home_dir="root"                                        
 upload_dir="fluxshare/ZelApps/ZelShare"
+source_url="cdn-4.runonflux.io/apps/fluxshare/getfile"
 
 function setup(){
 
@@ -13,18 +14,24 @@ echo -e "Installing system dependencies..."
 sudo apt install -y gzip jq curl wget > /dev/null 2>&1
 fi
 
-if [[ ! -f /$home_dir/discord.sh ]]; then
+if [[ ! -f /$home_dir/bootstrap_mirror_server/discord.sh ]]; then
 echo -e "Downloading discord script..."
-wget https://raw.githubusercontent.com/ChaoticWeg/discord.sh/master/discord.sh -O /$home_dir/discord.sh > /dev/null 2>&1 
-sudo chmod +x /$home_dir/discord.sh
+wget https://raw.githubusercontent.com/ChaoticWeg/discord.sh/master/discord.sh -O /$home_dir/bootstrap_mirror_server/discord.sh > /dev/null 2>&1 
+sudo chmod +x /$home_dir/bootstrap_mirror_server/discord.sh
 
 echo -e "Creating crone jobe..."
-(crontab -l -u "$username" 2>/dev/null; echo "*/30 * * * * bash /$home_dir/update_bootstrap.sh >> /$home_dir/bootstrap_debug.log 2>&1") | crontab -
+(crontab -l -u "$username" 2>/dev/null; echo "*/30 * * * * bash /$home_dir/bootstrap_mirror_server/update_bootstrap.sh >> /$home_dir/bootstrap_mirror_server/bootstrap_debug.log 2>&1") | crontab -
 fi
 
 if [[ ! -d /$home_dir/$upload_dir ]]; then
 echo -e "Creating upload directory..."
 sudo mkdir -p /$home_dir/$upload_dir
+fi
+
+if [[ ! -f /$home_dir/$upload_dir/flux_explorer_bootstrap.json ]]; then
+echo -e "Creating bootstrap info file..."
+mv /$home_dir/bootstrap_mirror_server/flux_explorer_bootstrap.json /$home_dir/$upload_dir
+mv /$home_dir/bootstrap_mirror_server/daemon_bootstrap.json /$home_dir/$upload_dir
 fi
 
 }
@@ -44,24 +51,12 @@ function check_tar()
 #install dependencies
 setup
 
-#run_check=$(ps aux | grep "/bin/sh -c bash /$home_dir/update_bootstrap.sh >> /$home_dir/bootstrap_debug.log 2>&1" | wc -l)
-#echo -e "Collision checking..."
-#echo -e "Running instance: $run_check"
-#if [[ "$run_check" -gt "2" ]]; then
-#  data=$(date -u)
-#  echo -e "Running script detected..! Action skipped.."
-#  echo -e "======================================================[$data][END]"
-#  exit
-#fi
-
 if [[ `pgrep -f $0` != "$$" ]]; then
  data=$(date -u)
  echo -e "Another instance of shell already exist! Exiting"
  echo -e "======================================================[$data][END]"
  exit
 fi
-
-
 
 if [[ -f /$home_dir/$upload_dir/daemon_bootstrap.json ]]; then
 
@@ -81,7 +76,7 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
 
   else
 
-   bash /$home_dir/discord.sh \
+   bash /$home_dir/bootstrap_mirror_server/discord.sh \
   --webhook-url="https://discord.com/api/webhooks/948287566069792840/IGJMvQiGOeDemIvX7bhK4bqgtGvXeScry1sAAxQsbw18qwiu15EbQWI-u-uBKt6JN6-A" \
   --username "Notification" \
   --title " :loudspeaker: \u200b  Bootstrap Update Notification" \
@@ -96,12 +91,12 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
     rm -rf /$home_dir/flux_explorer_bootstrap.tar.gz > /dev/null 2>&1
     rm -rf /$home_dir/flux_explorer_bootstrap.json > /dev/null 2>&1
     echo -e "Downloading...."
-    wget https://cdn-4.runonflux.io/apps/fluxshare/getfile/daemon_bootstrap.json -O /$home_dir/daemon_bootstrap.json > /dev/null 2>&1
-    wget https://cdn-4.runonflux.io/apps/fluxshare/getfile/daemon_bootstrap.tar.gz -O /$home_dir/daemon_bootstrap.tar.gz > /dev/null 2>&1
+    wget https://$source_url/daemon_bootstrap.json -O /$home_dir/daemon_bootstrap.json > /dev/null 2>&1
+    wget https://$source_url/daemon_bootstrap.tar.gz -O /$home_dir/daemon_bootstrap.tar.gz > /dev/null 2>&1
     check_tar /$home_dir/daemon_bootstrap.tar.gz
 
-    wget https://cdn-4.runonflux.io/apps/fluxshare/getfile/flux_explorer_bootstrap.json -O /$home_dir/flux_explorer_bootstrap.json > /dev/null 2>&1
-    wget https://cdn-4.runonflux.io/apps/fluxshare/getfile/flux_explorer_bootstrap.tar.gz -O /$home_dir/flux_explorer_bootstrap.tar.gz > /dev/null 2>&1
+    wget https://$source_url/flux_explorer_bootstrap.json -O /$home_dir/flux_explorer_bootstrap.json > /dev/null 2>&1
+    wget https://$source_url/flux_explorer_bootstrap.tar.gz -O /$home_dir/flux_explorer_bootstrap.tar.gz > /dev/null 2>&1
     check_tar /$home_dir/flux_explorer_bootstrap.tar.gz
 
 
@@ -117,7 +112,7 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
        mv /$home_dir/flux_explorer_bootstrap.tar.gz /$home_dir/$upload_dir
        echo -e "Bootstrap created successful! Files updated..."
 
-  bash /$home_dir/discord.sh \
+  bash /$home_dir/bootstrap_mirror_server/discord.sh \
   --webhook-url="https://discord.com/api/webhooks/948287566069792840/IGJMvQiGOeDemIvX7bhK4bqgtGvXeScry1sAAxQsbw18qwiu15EbQWI-u-uBKt6JN6-A" \
   --username "Notification" \
   --title " :loudspeaker: \u200b  Bootstrap Update Notification" \
