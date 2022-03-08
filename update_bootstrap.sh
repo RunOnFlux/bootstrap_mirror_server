@@ -2,7 +2,7 @@
 
 username="root"
 server_name="cdn-5.runonflux.io"
-home_dir="root"                                        
+home_dir="root"
 upload_dir="fluxshare/ZelApps/ZelShare"
 source_url="cdn-4.runonflux.io/apps/fluxshare/getfile"
 
@@ -11,15 +11,15 @@ function setup(){
 if ! jq --version > /dev/null 2>&1
 then
 echo -e "Installing system dependencies..."
-sudo apt install -y gzip jq curl wget > /dev/null 2>&1
+sudo apt install -y gzip jq pigz curl wget > /dev/null 2>&1
 fi
 
 if [[ ! -f /$home_dir/bootstrap_mirror_server/discord.sh ]]; then
-echo -e "Downloading discord script..."
+echo -e "Downloading Discord script..."
 wget https://raw.githubusercontent.com/ChaoticWeg/discord.sh/master/discord.sh -O /$home_dir/bootstrap_mirror_server/discord.sh > /dev/null 2>&1 
 sudo chmod +x /$home_dir/bootstrap_mirror_server/discord.sh
 
-echo -e "Creating crone jobe..."
+echo -e "Creating Cron job..."
 (crontab -l -u "$username" 2>/dev/null; echo "*/30 * * * * bash /$home_dir/bootstrap_mirror_server/update_bootstrap.sh >> /$home_dir/bootstrap_mirror_server/bootstrap_debug.log 2>&1") | crontab -
 fi
 
@@ -39,11 +39,11 @@ fi
 
 function check_tar()
 {
-    echo -e "Checking  bootstrap file integration..."
-    if gzip -t "$1" &>/dev/null; then
+    echo -e "Checking bootstrap file integration..."
+    if pigz -t "$1" &>/dev/null; then
         echo -e "Bootstrap file is valid!"
     else
-        echo -e "Bootstrap file is corrupted!"
+        echo -e "Bootstrap file is corrupt!"
         rm -rf $1
     fi
 }
@@ -53,7 +53,7 @@ setup
 
 if [[ `pgrep -f $0` != "$$" ]]; then
  data=$(date -u)
- echo -e "Another instance of shell already exist! Exiting"
+ echo -e "Another instance of this script already exist! Exiting"
  echo -e "======================================================[$data][END]"
  exit
 fi
@@ -84,7 +84,7 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
   --field "Server;$server_name" \
   --field "Status;Downloading..."
 
-    echo -e "Bootstrap is outdate!"
+    echo -e "Bootstrap is outdated!"
     echo -e "Cleaning...."
     rm -rf /$home_dir/daemon_bootstrap.tar.gz > /dev/null 2>&1
     rm -rf /$home_dir/daemon_bootstrap.json > /dev/null 2>&1
@@ -118,7 +118,7 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
   --title " :loudspeaker: \u200b  Bootstrap Update Notification" \
   --color "0xFFFFFF" \
   --field "Server;$server_name" \
-  --field "Status;Complited"
+  --field "Status;Completed"
 
     else
 
