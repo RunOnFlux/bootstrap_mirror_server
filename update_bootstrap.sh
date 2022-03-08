@@ -5,6 +5,8 @@ server_name="cdn-5.runonflux.io"
 home_dir="root"
 upload_dir="fluxshare/ZelApps/ZelShare"
 source_url="cdn-4.runonflux.io/apps/fluxshare/getfile"
+# fill on server
+web_hook_url=""
 
 function setup(){
 
@@ -77,7 +79,7 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
   else
 
    bash /$home_dir/bootstrap_mirror_server/discord.sh \
-  --webhook-url="https://discord.com/api/webhooks/948287566069792840/IGJMvQiGOeDemIvX7bhK4bqgtGvXeScry1sAAxQsbw18qwiu15EbQWI-u-uBKt6JN6-A" \
+  --webhook-url="$web_hook_url" \
   --username "Notification" \
   --title " :loudspeaker: \u200b  Bootstrap Update Notification" \
   --color "0xFFFFFF" \
@@ -113,7 +115,7 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
        echo -e "Bootstrap created successful! Files updated..."
 
   bash /$home_dir/bootstrap_mirror_server/discord.sh \
-  --webhook-url="https://discord.com/api/webhooks/948287566069792840/IGJMvQiGOeDemIvX7bhK4bqgtGvXeScry1sAAxQsbw18qwiu15EbQWI-u-uBKt6JN6-A" \
+  --webhook-url="$web_hook_url" \
   --username "Notification" \
   --title " :loudspeaker: \u200b  Bootstrap Update Notification" \
   --color "0xFFFFFF" \
