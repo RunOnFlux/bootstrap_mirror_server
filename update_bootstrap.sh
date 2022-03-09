@@ -51,9 +51,9 @@ function check_tar()
 setup
 
 if [[ -f /$home_dir/bootstrap_update_lock ]]; then
- data=$(date -u)
- echo -e "Another instance of this script already exist! Exiting"
- echo -e "======================================================[$data][END]"
+ #data=$(date -u)
+ #echo -e "Another instance of this script already exist! Exiting"
+ #echo -e "======================================================[$data][END]"
  exit
 fi
 
