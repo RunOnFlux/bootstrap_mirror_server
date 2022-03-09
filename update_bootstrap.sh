@@ -2,6 +2,8 @@
 
 #config file
 source $(dirname $(readlink -f $0))/bootstrap_config
+random_sleep=$(shuf -i 5-30 -n1)
+sleep $random_sleep
 
 function setup(){
 
