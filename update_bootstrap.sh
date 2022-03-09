@@ -140,4 +140,4 @@ echo  -e "======================================================[$data][END]"
 
 fi
 
-rm -rf /$home_dir/bootstrap_update_lock
+rm -rf /$home_dir/bootstrap_update_lock > /dev/null 2>&1
