@@ -1,12 +1,7 @@
 #!/bin/bash
 
-username="root"
-server_name="cdn-5.runonflux.io"
-home_dir="root"
-upload_dir="fluxshare/ZelApps/ZelShare"
-source_url="cdn-4.runonflux.io/apps/fluxshare/getfile"
-# fill on server
-web_hook_url=""
+#config file
+source /root/bootstrap_mirror_server/bootstrap_config
 
 function setup(){
 
