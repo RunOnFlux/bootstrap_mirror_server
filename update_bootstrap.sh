@@ -63,7 +63,7 @@ if [[ -f /$home_dir/$upload_dir/daemon_bootstrap.json ]]; then
 
 data=$(date -u)
 local_bootstrap_height=$(cat /$home_dir/$upload_dir/daemon_bootstrap.json | jq -r .block_height)
-bootstrap_server_height=$(curl -SsL -m 10 http://$source_url/apps/fluxshare/getfile/daemon_bootstrap.json | jq -r .block_height)
+bootstrap_server_height=$(curl -SsL -m 10 http://$source_url/daemon_bootstrap.json | jq -r .block_height)
 
 echo -e ""
 echo -e "Local bootstrap height = $local_bootstrap_height"
