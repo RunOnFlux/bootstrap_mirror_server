@@ -2,7 +2,7 @@
 
 #config file
 source $(dirname $(readlink -f $0))/bootstrap_config
-random_sleep=$(shuf -i 5-30 -n1)
+random_sleep=$(shuf -i 5-60 -n1)
 sleep $random_sleep
 
 function setup(){
@@ -10,7 +10,7 @@ function setup(){
 if ! jq --version > /dev/null 2>&1
 then
 echo -e "Installing system dependencies..."
-sudo apt install -y gzip jq pigz curl wget > /dev/null 2>&1
+sudo apt install -y gzip jq curl wget > /dev/null 2>&1
 fi
 
 if [[ ! -f /$home_dir/bootstrap_mirror_server/discord.sh ]]; then
@@ -39,7 +39,7 @@ fi
 function check_tar()
 {
     echo -e "Checking bootstrap file integration..."
-    if pigz -t "$1" &>/dev/null; then
+    if gzip -t "$1" &>/dev/null; then
         echo -e "Bootstrap file is valid!"
     else
         echo -e "Bootstrap file is corrupt!"
