@@ -63,7 +63,7 @@ if [[ -f /$home_dir/$upload_dir/daemon_bootstrap.json ]]; then
 
 data=$(date -u)
 local_bootstrap_height=$(cat /$home_dir/$upload_dir/daemon_bootstrap.json | jq -r .block_height)
-bootstrap_server_height=$(curl -SsL -m 10 https://cdn-4.runonflux.io/apps/fluxshare/getfile/daemon_bootstrap.json | jq -r .block_height)
+bootstrap_server_height=$(curl -SsL -m 10 http://$source_url/apps/fluxshare/getfile/daemon_bootstrap.json | jq -r .block_height)
 
 echo -e ""
 echo -e "Local bootstrap height = $local_bootstrap_height"
@@ -92,12 +92,12 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
     rm -rf /$home_dir/flux_explorer_bootstrap.tar.gz > /dev/null 2>&1
     rm -rf /$home_dir/flux_explorer_bootstrap.json > /dev/null 2>&1
     echo -e "Downloading...."
-    wget https://$source_url/daemon_bootstrap.json -O /$home_dir/daemon_bootstrap.json > /dev/null 2>&1
-    wget https://$source_url/daemon_bootstrap.tar.gz -O /$home_dir/daemon_bootstrap.tar.gz > /dev/null 2>&1
+    wget http://$source_url/daemon_bootstrap.json -O /$home_dir/daemon_bootstrap.json > /dev/null 2>&1
+    wget http://$source_url/daemon_bootstrap.tar.gz -O /$home_dir/daemon_bootstrap.tar.gz > /dev/null 2>&1
     check_tar /$home_dir/daemon_bootstrap.tar.gz
 
-    wget https://$source_url/flux_explorer_bootstrap.json -O /$home_dir/flux_explorer_bootstrap.json > /dev/null 2>&1
-    wget https://$source_url/flux_explorer_bootstrap.tar.gz -O /$home_dir/flux_explorer_bootstrap.tar.gz > /dev/null 2>&1
+    wget http://$source_url/flux_explorer_bootstrap.json -O /$home_dir/flux_explorer_bootstrap.json > /dev/null 2>&1
+    wget http://$source_url/flux_explorer_bootstrap.tar.gz -O /$home_dir/flux_explorer_bootstrap.tar.gz > /dev/null 2>&1
     check_tar /$home_dir/flux_explorer_bootstrap.tar.gz
 
 
