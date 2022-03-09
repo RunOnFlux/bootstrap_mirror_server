@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #config file
-source $(dirname $(readlink -f $0))/bootstrap_config
+source "$(dirname $(readlink -f $0))/bootstrap_config"
 
 function setup(){
 
