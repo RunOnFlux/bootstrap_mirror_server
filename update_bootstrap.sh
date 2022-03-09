@@ -53,12 +53,14 @@ function check_tar()
 #install dependencies
 setup
 
-if [[ `pgrep -f $0` != "$$" ]]; then
+if [[ -f /$home_dir/bootstrap_update_lock ]]; then
  data=$(date -u)
  echo -e "Another instance of this script already exist! Exiting"
  echo -e "======================================================[$data][END]"
  exit
 fi
+
+echo 'Running' >> /$home_dir/bootstrap_update_lock
 
 if [[ -f /$home_dir/$upload_dir/daemon_bootstrap.json ]]; then
 
@@ -137,3 +139,5 @@ fi
 echo  -e "======================================================[$data][END]"
 
 fi
+
+rm -rf /$home_dir/bootstrap_update_lock
