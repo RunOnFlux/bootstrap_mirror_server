@@ -20,6 +20,11 @@ sudo chmod +x /$home_dir/bootstrap_mirror_server/discord.sh
 
 echo -e "Creating Cron job..."
 (crontab -l -u "$username" 2>/dev/null; echo "*/30 * * * * bash /$home_dir/bootstrap_mirror_server/update_bootstrap.sh >> /$home_dir/bootstrap_mirror_server/bootstrap_debug.log 2>&1") | crontab -
+  if [[ "$screen_enable" == "1" ]]; then
+     sudo chmod +x /$home_dir/bootstrap_mirror_server/screen_check.sh > /dev/null 2>&1 
+     (crontab -l -u "$username" 2>/dev/null; echo "*/15 * * * * bash /$home_dir/bootstrap_mirror_server/screen_check.sh") | crontab -
+  fi
+  
 fi
 
 if [[ ! -d /$home_dir/$upload_dir ]]; then
