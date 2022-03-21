@@ -6,3 +6,4 @@ source_url="cdn-4.runonflux.io/apps/fluxshare/getfile"
 # fill on server
 web_hook_url=""
 screen_enable="1"
+user_id_list="<@396036328187363330><@816423271993049129>"
