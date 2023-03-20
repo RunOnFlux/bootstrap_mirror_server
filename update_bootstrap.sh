@@ -45,6 +45,7 @@ function check_tar()
 {
     echo -e "Checking bootstrap file integration..."
     if gzip -t "$1" &>/dev/null; then
+        isOK="1"
         echo -e "Bootstrap file is valid!"
     else
         echo -e "Bootstrap file is corrupt!"
@@ -99,12 +100,37 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
     echo -e "Downloading...."
     wget http://$source_url/daemon_bootstrap.json -O /$home_dir/daemon_bootstrap.json > /dev/null 2>&1
     wget http://$source_url/daemon_bootstrap.tar.gz -O /$home_dir/daemon_bootstrap.tar.gz > /dev/null 2>&1
-    check_tar /$home_dir/daemon_bootstrap.tar.gz
-
-    wget http://$source_url/flux_explorer_bootstrap.json -O /$home_dir/flux_explorer_bootstrap.json > /dev/null 2>&1
-    wget http://$source_url/flux_explorer_bootstrap.tar.gz -O /$home_dir/flux_explorer_bootstrap.tar.gz > /dev/null 2>&1
-    check_tar /$home_dir/flux_explorer_bootstrap.tar.gz
-
+    if [[ $? -ne 0 ]]; then
+      rm -rf /$home_dir/daemon_bootstrap.tar.gz
+      bash /$home_dir/bootstrap_mirror_server/discord.sh \
+      --webhook-url="$web_hook_url" \
+      --username "Alert" \
+      --title " :warning:  \u200b  Bootstrap Server Alert" \
+      --color "0xED4245" \
+      --field "Server;$server_name" \
+      --field "Info;Wget problem detected! Check disk space.." \
+      --text "Ping: $user_id_list"
+    else
+      check_tar /$home_dir/daemon_bootstrap.tar.gz
+    fi
+    
+    if [[ "$isOK" == "1" ]]; then
+      wget http://$source_url/flux_explorer_bootstrap.json -O /$home_dir/flux_explorer_bootstrap.json > /dev/null 2>&1
+      wget http://$source_url/flux_explorer_bootstrap.tar.gz -O /$home_dir/flux_explorer_bootstrap.tar.gz > /dev/null 2>&1
+      if [[ $? -ne 0 ]]; then
+        rm -rf /$home_dir/flux_explorer_bootstrap.tar.gz
+        bash /$home_dir/bootstrap_mirror_server/discord.sh \
+        --webhook-url="$web_hook_url" \
+        --username "Alert" \
+        --title " :warning:  \u200b  Bootstrap Server Alert" \
+        --color "0xED4245" \
+        --field "Server;$server_name" \
+        --field "Info;Wget problem detected! Check disk space.." \
+        --text "Ping: $user_id_list"
+      else
+        check_tar /$home_dir/flux_explorer_bootstrap.tar.gz
+      fi
+    fi  
 
     if [[ -f /$home_dir/daemon_bootstrap.tar.gz && -f /$home_dir/flux_explorer_bootstrap.tar.gz ]]; then
 
