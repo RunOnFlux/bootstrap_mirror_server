@@ -83,6 +83,12 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
 
   else
 
+   df_check=$(df | grep "/$" | awk '{ printf "%d\n", $3/1024/1024 }')
+   if [[ $df_check -lt 50 ]]; then 
+      rm -rf /$home_dir/$upload_dir/daemon_bootstrap.tar.gz > /dev/null 2>&1
+      rm -rf /$home_dir/$upload_dir/flux_explorer_bootstrap.tar.gz > /dev/null 2>&1
+   fi
+   
    bash /$home_dir/bootstrap_mirror_server/discord.sh \
   --webhook-url="$web_hook_url" \
   --username "Notification" \
@@ -127,6 +133,8 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
         --field "Server;$server_name" \
         --field "Info;Wget problem detected! Check disk space.." \
         --text "Ping: $user_id_list"
+
+        rm -rf /$home_dir/$upload_dir/flux_explorer_bootstrap.tar.gz
       else
         check_tar /$home_dir/flux_explorer_bootstrap.tar.gz
       fi
