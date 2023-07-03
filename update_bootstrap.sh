@@ -83,8 +83,9 @@ if [[ "$local_bootstrap_height" != "" && "$bootstrap_server_height" != "" ]]; th
 
   else
 
-   df_check=$(df | grep "/$" | awk '{ printf "%d\n", $3/1024/1024 }')
+   df_check=$(df | grep "/$" | awk '{ printf "%d\n", $4/1024/1024 }')
    if [[ $df_check -lt 50 ]]; then 
+      echo -e "Disk space belown 50GB, removing old bootstrap..."
       rm -rf /$home_dir/$upload_dir/daemon_bootstrap.tar.gz > /dev/null 2>&1
       rm -rf /$home_dir/$upload_dir/flux_explorer_bootstrap.tar.gz > /dev/null 2>&1
    fi
